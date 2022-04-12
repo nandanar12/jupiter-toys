@@ -1,0 +1,39 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+image: markhobson/maven-chrome:jdk-17
+
+stages:
+  - build
+  - test
+
+variables:
+  DOCKER_DRIVER: overlay
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+    paths:
+      - .m2/repository/
+      - target/
+
+build:
+  stage: build
+  script:
+    - mvn compile
+
+ui-tests:
+  stage: test
+  script:
+    - mvn clean verify
+  artifacts:
+    name: "serenity"
+    paths:
+      - target/site/serenity/*
+    reports:
+      junit:
+        - target/failsafe-reports/TEST-*.xml
