@@ -3,6 +3,7 @@ package testScenarios.contactScenarios;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.thucydides.core.annotations.Managed;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -48,7 +49,7 @@ public class ContactFormSuccessfulSubmit {
         final List<String[]> shoppingList = testDataHelper.getShoppingListItems();
         navigationBarActions.clickContact();
         contactPageActions.enterValues(shoppingList.get(1)[0], shoppingList.get(1)[1], shoppingList.get(1)[2]);
-        Assert.assertFalse(contactPageActions.verifyErrorMessage());
+        Assertions.assertFalse(contactPageActions.verifyErrorMessage());
         contactPageActions.clickSubmit();
         contactPageActions.checkSubmitMessage();
         navigationBarActions.clickHome();
